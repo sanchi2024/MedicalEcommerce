@@ -1,8 +1,10 @@
 import { Link } from "react-router";
 import { ShoppingCart, Heart } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
+import { isInWishlist, toggleWishlist } from "../utils/wishlist";
 
 export interface Product {
   id: string;
@@ -24,9 +26,21 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product }: ProductCardProps) {
+  const [wished, setWished] = useState(false);
+
   const discountPercent = product.originalPrice
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
     : 0;
+
+  useEffect(() => {
+    setWished(isInWishlist(product.id));
+  }, [product.id]);
+
+  const handleWishlistClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    toggleWishlist(product.id);
+    setWished((prev) => !prev);
+  };
 
   return (
     <div className="group bg-white rounded-xl border border-border hover:shadow-lg transition-all duration-300 overflow-hidden">
@@ -58,12 +72,9 @@ export function ProductCard({ product }: ProductCardProps) {
             size="icon"
             variant="secondary"
             className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity rounded-full"
-            onClick={(e) => {
-              e.preventDefault();
-              // Handle wishlist
-            }}
+            onClick={handleWishlistClick}
           >
-            <Heart className="h-4 w-4" />
+            <Heart className={`h-4 w-4 ${wished ? "text-destructive" : ""}`} />
           </Button>
         </div>
 

@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { Search, ShoppingCart, User, Heart, Menu, ChevronDown } from "lucide-react";
+import { Search, ShoppingCart, User, Heart, Menu, ChevronDown, Package } from "lucide-react";
 import { Button } from "./ui/button";
 import {
   DropdownMenu,
@@ -8,10 +8,19 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { Badge } from "./ui/badge";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { getWishlistIds } from "../utils/wishlist";
 
 export function Navbar() {
   const [cartCount] = useState(3);
+  const [wishlistCount, setWishlistCount] = useState(0);
+
+  useEffect(() => {
+    const update = () => setWishlistCount(getWishlistIds().length);
+    update();
+    window.addEventListener("wishlist-changed", update);
+    return () => window.removeEventListener("wishlist-changed", update);
+  }, []);
 
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-border shadow-sm">
@@ -107,8 +116,22 @@ export function Navbar() {
             </DropdownMenu>
 
             {/* Wishlist */}
-            <Button variant="ghost" size="icon" className="relative">
-              <Heart className="h-5 w-5" />
+            <Button variant="ghost" size="icon" asChild className="relative">
+              <Link to="/wishlist">
+                <Heart className="h-5 w-5" />
+                {wishlistCount > 0 && (
+                  <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs bg-destructive text-destructive-foreground">
+                    {wishlistCount}
+                  </Badge>
+                )}
+              </Link>
+            </Button>
+
+            {/* Orders */}
+            <Button variant="ghost" size="icon" asChild className="relative">
+              <Link to="/orders">
+                <Package className="h-5 w-5" />
+              </Link>
             </Button>
 
             {/* Login */}

@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router";
 import { Heart, Minus, Plus, ShoppingCart, Star, Truck, Shield, ArrowLeft } from "lucide-react";
+import { isInWishlist, toggleWishlist } from "../utils/wishlist";
 import { Button } from "../components/ui/button";
 import { Badge } from "../components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
@@ -13,6 +14,13 @@ export function ProductDetail() {
   const product = mockProducts.find((p) => p.id === id);
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
+  const [wished, setWished] = useState(false);
+
+  useEffect(() => {
+    if (product) {
+      setWished(isInWishlist(product.id));
+    }
+  }, [product]);
 
   if (!product) {
     return (
@@ -169,8 +177,18 @@ export function ProductDetail() {
                 <Button size="lg" variant="outline" className="flex-1">
                   Buy Now
                 </Button>
-                <Button size="lg" variant="outline" className="px-4">
-                  <Heart className="h-5 w-5" />
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="px-4"
+                  onClick={() => {
+                    if (product) {
+                      toggleWishlist(product.id);
+                      setWished((p) => !p);
+                    }
+                  }}
+                >
+                  <Heart className={`h-5 w-5 ${wished ? "text-destructive" : ""}`} />
                 </Button>
               </div>
 

@@ -14,7 +14,8 @@
   --secondary-foreground: #0d9488;
   --muted: #f1f5f9;
   --muted-foreground: #64748b;
-  --accent: #0ea5e9;
+  /* accent changed to align with primary/greenish-blue for better hover coordination */
+  --accent: #0d9488; /* same as primary */
   --accent-foreground: #ffffff;
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
@@ -59,7 +60,8 @@
   --secondary-foreground: #f8fafc;
   --muted: #334155;
   --muted-foreground: #94a3b8;
-  --accent: #0284c7;
+  /* dark mode accent also kept close to primary for consistency */
+  --accent: #0d9488;
   --accent-foreground: #ffffff;
   --destructive: #dc2626;
   --destructive-foreground: #ffffff;
